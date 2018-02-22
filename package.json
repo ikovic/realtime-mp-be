@@ -6,7 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-modules index.mjs",
-    "dev": "nodemon --experimental-modules index.mjs"
+    "dev": "nodemon --experimental-modules index.mjs",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "./**/*.mjs,": [
+      "eslint",
+      "prettier --write",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -26,6 +34,9 @@
   },
   "devDependencies": {
     "eslint": "^4.18.1",
-    "nodemon": "^1.15.1"
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.0",
+    "nodemon": "^1.15.1",
+    "prettier": "^1.10.2"
   }
 }
