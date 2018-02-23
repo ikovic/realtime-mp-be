@@ -10,11 +10,7 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "./**/*.mjs,": [
-      "eslint",
-      "prettier --write",
-      "git add"
-    ]
+    "./**/*.mjs,": ["eslint", "prettier --write", "git add"]
   },
   "repository": {
     "type": "git",
