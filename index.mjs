@@ -1,11 +1,22 @@
 import express from 'express';
-import compression from 'compression';
+import cors from 'cors';
 import helmet from 'helmet';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import initializePassport from './passport';
 import { PORT } from './config';
 import api from './routes';
+import mongoose from 'mongoose';
+
+mongoose.connect('mongodb://localhost:27017');
 
 const app = express();
 
+initializePassport(app);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 app.use(helmet());
 app.use(compression());
 
