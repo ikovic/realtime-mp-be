@@ -4,11 +4,11 @@ import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import initializePassport from './passport';
-import { PORT } from './config';
+import { PORT, DB_CONNECTION } from './config';
 import api from './routes';
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect(DB_CONNECTION);
 
 const app = express();
 
