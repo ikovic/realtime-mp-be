@@ -1,11 +1,10 @@
-import GoogleTokenStrategy from 'passport-google-id-token';
-import users from '../models/user';
+import R from 'ramda';
 import passport from 'passport';
-import { GOOGLE_ID, GOOGLE_SECRET, FACEBOOK_ID, FACEBOOK_SECRET } from '../config';
-import * as userService from '../services/user';
 import PassportOAuth from 'passport-google-oauth';
 import PassportFacebookStrategy from 'passport-facebook';
-import R from 'ramda';
+import users from '../models/user';
+import * as userService from '../services/user';
+import { GOOGLE_ID, GOOGLE_SECRET, FACEBOOK_ID, FACEBOOK_SECRET } from '../config';
 
 const GoogleStrategy = PassportOAuth.OAuth2Strategy;
 const FacebookStrategy = PassportFacebookStrategy.Strategy;
@@ -24,30 +23,20 @@ export default app => {
     }
   });
 
-  const handleStrategy = async (strategy, { id, email, name }, done) => {
+  // A more generalised way to handle strategy callbacks. It takes the user email and the done function.
+  // It then proceeds to login the user. If there is no user with the associated email, create him.
+  // Both cases (user exists and user doesn't exist) will proceed to the next middleware with the user in the 'user' field of the request object.
+  // If it fails in any of the steps it will return the 'Unauthorized' http status.
+  const handleStrategy = async (email, done) => {
     try {
       const user = await userService.findByEmail(email);
-
-      const data = {
-        id,
-        name,
-      };
 
       if (!user) {
         const newUser = await userService.createUser({
           email,
-          [strategy]: data,
         });
 
         return done(null, newUser.toObject());
-      }
-
-      if (R.isEmpty(user[strategy].toObject())) {
-        const updatedUser = { ...user, [strategy]: data };
-
-        await userService.updateById(user._id, { [strategy]: data });
-
-        return done(null, updatedUser);
       }
 
       done(null, user.toObject());
@@ -64,9 +53,9 @@ export default app => {
         callbackURL: 'http://localhost:5000/auth/google/callback',
       },
       (token, refreshToken, profile, done) => {
-        const { id, emails: [{ value: email }], displayName: name } = profile._json;
+        const { emails: [{ value: email }] } = profile._json;
 
-        handleStrategy('google', { id, email, name }, done);
+        handleStrategy(email, done);
       },
     ),
   );
@@ -77,12 +66,12 @@ export default app => {
         clientID: FACEBOOK_ID,
         clientSecret: FACEBOOK_SECRET,
         callbackURL: 'http://localhost:5000/auth/facebook/callback',
-        profileFields: ['id', 'emails', 'name'],
+        profileFields: ['emails'],
       },
       (accessToken, refreshToken, profile, done) => {
-        const { id, email, first_name: name } = profile._json;
+        const { email } = profile._json;
 
-        handleStrategy('facebook', { id, email, name }, done);
+        handleStrategy(email, done);
       },
     ),
   );

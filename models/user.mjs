@@ -5,23 +5,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  google: {
+  name: {
+    type: String,
     required: false,
-    id: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-  },
-  facebook: {
-    required: false,
-    id: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
   },
 });
 

@@ -7,3 +7,5 @@ export const FACEBOOK_SECRET = 'a43a976e6fb1006b469ea1064501caab';
 
 export const JWT_SECRET = '<insert_secret_here>';
 export const EXPIRES_IN = '1h';
+
+export const BASE_REDIRECT_URL = 'http://localhost:3000';

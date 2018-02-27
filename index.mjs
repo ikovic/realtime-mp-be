@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import compression from 'compression';
-import initializePassport from './passport';
-import { PORT, DB_CONNECTION } from './config';
 import api from './routes/api';
 import auth from './routes/auth';
-import mongoose from 'mongoose';
+import initializePassport from './passport';
+import { PORT, DB_CONNECTION } from './config';
 
 mongoose.connect(DB_CONNECTION);
 
