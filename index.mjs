@@ -5,7 +5,8 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import initializePassport from './passport';
 import { PORT, DB_CONNECTION } from './config';
-import api from './routes';
+import api from './routes/api';
+import auth from './routes/auth';
 import mongoose from 'mongoose';
 
 mongoose.connect(DB_CONNECTION);
@@ -21,6 +22,7 @@ app.use(helmet());
 app.use(compression());
 
 app.use('/api', api);
+app.use('/auth', auth);
 
 app.listen(PORT, () => {
   console.log(`Server started at ${PORT}`);
