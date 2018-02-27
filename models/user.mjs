@@ -6,13 +6,21 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   google: {
+    required: false,
     id: {
       type: String,
-      required: false,
     },
     name: {
       type: String,
-      required: true,
+    },
+  },
+  facebook: {
+    required: false,
+    id: {
+      type: String,
+    },
+    name: {
+      type: String,
     },
   },
 });

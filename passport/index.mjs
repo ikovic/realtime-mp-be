@@ -5,6 +5,7 @@ import { GOOGLE_ID, GOOGLE_SECRET, FACEBOOK_ID, FACEBOOK_SECRET } from '../confi
 import * as userService from '../services/user';
 import PassportOAuth from 'passport-google-oauth';
 import PassportFacebookStrategy from 'passport-facebook';
+import R from 'ramda';
 
 const GoogleStrategy = PassportOAuth.OAuth2Strategy;
 const FacebookStrategy = PassportFacebookStrategy.Strategy;
@@ -23,35 +24,37 @@ export default app => {
     }
   });
 
-  // passport.use(
-  //   new GoogleTokenStrategy(
-  //     {
-  //       clientID: GOOGLE_ID,
-  //     },
-  //     async (parsedToken, googleId, done) => {
-  //       console.log(parsedToken);
-  //       try {
-  //         const user = await userService.findByGoogleId(googleId);
+  const handleStrategy = async (strategy, { id, email, name }, done) => {
+    try {
+      const user = await userService.findByEmail(email);
 
-  //         if (user) {
-  //           return done(null, user);
-  //         }
+      const data = {
+        id,
+        name,
+      };
 
-  //         const newUser = await userService.createUser({
-  //           email: parsedToken.payload.email,
-  //           google: {
-  //             id: googleId,
-  //             name: parsedToken.payload.name,
-  //           },
-  //         });
+      if (!user) {
+        const newUser = await userService.createUser({
+          email,
+          [strategy]: data,
+        });
 
-  //         done(null, newUser);
-  //       } catch (err) {
-  //         done(err, null);
-  //       }
-  //     },
-  //   ),
-  // );
+        return done(null, newUser.toObject());
+      }
+
+      if (R.isEmpty(user[strategy].toObject())) {
+        const updatedUser = { ...user, [strategy]: data };
+
+        await userService.updateById(user._id, { [strategy]: data });
+
+        return done(null, updatedUser);
+      }
+
+      done(null, user.toObject());
+    } catch (error) {
+      done(error);
+    }
+  };
 
   passport.use(
     new GoogleStrategy(
@@ -60,29 +63,10 @@ export default app => {
         clientSecret: GOOGLE_SECRET,
         callbackURL: 'http://localhost:5000/auth/google/callback',
       },
-      async (token, refreshToken, profile, done) => {
-        console.dir(profile._json, 'profile');
-        const { id, emails: [{ value: email }] } = profile._json;
-        console.log(email, id);
-        try {
-          const user = await userService.findByGoogleId(id);
+      (token, refreshToken, profile, done) => {
+        const { id, emails: [{ value: email }], displayName: name } = profile._json;
 
-          if (user) {
-            return done(null, user);
-          }
-
-          // const newUser = await userService.createUser({
-          //   email: parsedToken.payload.email,
-          //   google: {
-          //     id: googleId,
-          //     name: parsedToken.payload.name,
-          //   },
-          // });
-
-          done(null, {});
-        } catch (error) {
-          done(error);
-        }
+        handleStrategy('google', { id, email, name }, done);
       },
     ),
   );
@@ -95,10 +79,10 @@ export default app => {
         callbackURL: 'http://localhost:5000/auth/facebook/callback',
         profileFields: ['id', 'emails', 'name'],
       },
-      function(accessToken, refreshToken, profile, done) {
-        console.log(accessToken, refreshToken, profile, done);
+      (accessToken, refreshToken, profile, done) => {
+        const { id, email, first_name: name } = profile._json;
 
-        done(null, {});
+        handleStrategy('facebook', { id, email, name }, done);
       },
     ),
   );
