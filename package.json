@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-modules index.mjs",
     "dev": "NODE_ENV=development nodemon --experimental-modules index.mjs",
-    "docker-dev-build": "docker-compose -f ./docker-compose.dev.yml build",
+    "docker-dev-build": "docker-compose -f ./docker-compose.dev.yml build --no-cache",
     "docker-dev-run": "docker-compose -f ./docker-compose.dev.yml up -d",
     "docker-dev-stop": "docker-compose down",
     "precommit": "lint-staged"
