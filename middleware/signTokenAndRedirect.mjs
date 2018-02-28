@@ -5,7 +5,7 @@ import { JWT_SECRET, EXPIRES_IN as expiresIn, FRONTEND_URL } from '../config';
 const signTokenAndRedirect = (req, res, next) => {
   const token = jwt.sign(req.user, JWT_SECRET, { expiresIn });
 
-  const redirectHref = req.user.name ? '' : '/user/edit';
+  const redirectHref = req.user.name ? '' : '/user';
 
   res.redirect(`${FRONTEND_URL}${redirectHref}?token=${token}`);
 };
