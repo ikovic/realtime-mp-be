@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, EXPIRES_IN as expiresIn, BASE_REDIRECT_URL } from '../config';
+import { JWT_SECRET, EXPIRES_IN as expiresIn, FRONTEND_URL } from '../config';
 
 // Sign a token and redirect the user to the frontend route with the token in query params
 const signTokenAndRedirect = (req, res, next) => {
@@ -7,7 +7,7 @@ const signTokenAndRedirect = (req, res, next) => {
 
   const redirectHref = req.user.name ? '' : '/user/edit';
 
-  res.redirect(`${BASE_REDIRECT_URL}${redirectHref}?token=${token}`);
+  res.redirect(`${FRONTEND_URL}${redirectHref}?token=${token}`);
 };
 
 export default signTokenAndRedirect;
