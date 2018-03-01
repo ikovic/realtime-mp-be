@@ -8,11 +8,11 @@ import compression from 'compression';
 import api from './routes/api';
 import auth from './routes/auth';
 import initializePassport from './passport';
-import { PORT, DB_CONNECTION, REDIS_CONNECTION } from './config';
+import config from './config';
 
-mongoose.connect(DB_CONNECTION);
+mongoose.connect(config.get('dbConnection'));
 
-const redisClient = redis.createClient(REDIS_CONNECTION);
+const redisClient = redis.createClient(config.get('redisConnection'));
 
 const app = express();
 
@@ -27,6 +27,6 @@ app.use(compression());
 app.use('/api', api);
 app.use('/auth', auth);
 
-app.listen(PORT, () => {
-  console.log(`Server started at ${PORT}`);
+app.listen(config.get('port'), () => {
+  console.log(`Server started at ${config.get('port')}`);
 });

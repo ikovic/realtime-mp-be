@@ -2,9 +2,9 @@ import R from 'ramda';
 import passport from 'passport';
 import PassportOAuth from 'passport-google-oauth';
 import PassportFacebookStrategy from 'passport-facebook';
+import config from '../config';
 import users from '../models/user';
 import * as userService from '../services/user';
-import { GOOGLE_ID, GOOGLE_SECRET, FACEBOOK_ID, FACEBOOK_SECRET } from '../config';
 
 const GoogleStrategy = PassportOAuth.OAuth2Strategy;
 const FacebookStrategy = PassportFacebookStrategy.Strategy;
@@ -48,8 +48,8 @@ export default app => {
   passport.use(
     new GoogleStrategy(
       {
-        clientID: GOOGLE_ID,
-        clientSecret: GOOGLE_SECRET,
+        clientID: config.get('google.id'),
+        clientSecret: config.get('google.secret'),
         callbackURL: 'http://localhost:5000/auth/google/callback',
       },
       (token, refreshToken, profile, done) => {
@@ -63,8 +63,8 @@ export default app => {
   passport.use(
     new FacebookStrategy(
       {
-        clientID: FACEBOOK_ID,
-        clientSecret: FACEBOOK_SECRET,
+        clientID: config.get('facebook.id'),
+        clientSecret: config.get('facebook.secret'),
         callbackURL: 'http://localhost:5000/auth/facebook/callback',
         profileFields: ['emails'],
       },
