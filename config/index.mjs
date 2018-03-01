@@ -1,9 +1,8 @@
 import convict from 'convict';
 import path from 'path';
 import dotenv from 'dotenv';
-console.log(process.env.NODE_ENV);
 
-dotenv.config({ path: path.resolve(process.cwd(), process.env.NODE_ENV === 'production' ? '.env' : '.dev.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const config = convict({
   env: {
