@@ -2,6 +2,8 @@ version: '3'
 services:
   backend:
     build: .
+    environment:
+      - NODE_ENV=production
     volumes:
       - .:/user/src/app/backend
     ports:

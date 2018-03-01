@@ -1,6 +1,0 @@
-{
-  "port": 5000,
-  "dbConnection": "mongodb://localhost:27017",
-  "redisConnection": "redis://localhost:6379",
-  "frontendUrl": "http://localhost:3000"
-}
