@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, EXPIRES_IN as expiresIn, FRONTEND_URL } from '../config';
+import config from '../config';
 
 // Sign a token and redirect the user to the frontend route with the token in query params
 const signTokenAndRedirect = (req, res, next) => {
-  const token = jwt.sign(req.user, JWT_SECRET, { expiresIn });
+  const token = jwt.sign(req.user, config.get('jwtSecret'), { expiresIn: config.get('jwtExpiration') });
 
-  res.redirect(`${FRONTEND_URL}/callback?token=${token}`);
+  res.redirect(`${config.get('frontendUrl')}/callback?token=${token}`);
 };
 
 export default signTokenAndRedirect;

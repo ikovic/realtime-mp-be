@@ -7,14 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-modules index.mjs",
     "dev": "nodemon --experimental-modules index.mjs",
+    "docker-dev-build": "docker-compose -f ./docker-compose.dev.yml build --no-cache",
+    "docker-dev-run": "docker-compose -f ./docker-compose.dev.yml up -d",
+    "docker-dev-stop": "docker-compose down",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "./**/*.mjs,": [
-      "eslint",
-      "prettier --write",
-      "git add"
-    ]
+    "./**/*.mjs,": ["eslint", "prettier --write", "git add"]
   },
   "repository": {
     "type": "git",
@@ -29,7 +28,9 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "compression": "^1.7.2",
+    "convict": "^4.0.2",
     "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "helmet": "^3.11.0",
     "jsonwebtoken": "^8.1.1",
@@ -37,7 +38,8 @@
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "eslint": "^4.18.1",

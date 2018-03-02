@@ -1,15 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import redis from 'redis';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import api from './routes/api';
 import auth from './routes/auth';
 import initializePassport from './passport';
-import { PORT, DB_CONNECTION } from './config';
+import config from './config';
 
-mongoose.connect(DB_CONNECTION);
+mongoose.connect(config.get('dbConnection'));
+
+const redisClient = redis.createClient(config.get('redisConnection'));
 
 const app = express();
 
@@ -24,6 +27,6 @@ app.use(compression());
 app.use('/api', api);
 app.use('/auth', auth);
 
-app.listen(PORT, () => {
-  console.log(`Server started at ${PORT}`);
+app.listen(config.get('port'), () => {
+  console.log(`Server started at ${config.get('port')}`);
 });

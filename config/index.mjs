@@ -1,11 +1,70 @@
-export const PORT = 5000;
-export const DB_CONNECTION = 'mongodb://localhost:27017';
-export const GOOGLE_ID = '723860365140-n84h96s612vhcf25tf7ic25q7cnnb8fb.apps.googleusercontent.com';
-export const GOOGLE_SECRET = 'tzT0hYb4imxMZ4N6hLbskQKp';
-export const FACEBOOK_ID = '213243595893523';
-export const FACEBOOK_SECRET = 'a43a976e6fb1006b469ea1064501caab';
+import convict from 'convict';
+import path from 'path';
+import dotenv from 'dotenv';
 
-export const JWT_SECRET = '<insert_secret_here>';
-export const EXPIRES_IN = '1h';
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
-export const FRONTEND_URL = 'http://localhost:3000';
+const config = convict({
+  env: {
+    doc: 'Application environment',
+    format: ['development', 'production'],
+    default: 'development',
+    env: 'NODE_ENV',
+  },
+  port: {
+    doc: 'Application binding port',
+    default: 5000,
+    env: 'PORT',
+  },
+  frontendUrl: {
+    doc: 'Frontend application url',
+    default: 'http://localhost:3000',
+    env: 'FRONTEND_URL',
+  },
+  jwtSecret: {
+    doc: 'Jsonwebtoken secret',
+    default: 'test',
+    env: 'JWT_SECRET',
+  },
+  jwtExpiration: {
+    doc: 'Jsonwebtoken expiration',
+    default: '30m',
+    env: 'JWT_EXPIRATION',
+  },
+  dbConnection: {
+    doc: 'Database connection',
+    default: 'mongodb://localhost:27017',
+    env: 'DB_CONNECTION',
+  },
+  redisConnection: {
+    doc: 'Redis connection',
+    default: 'redis://localhost:6379',
+    env: 'REDIS_CONNECTION',
+  },
+  google: {
+    id: {
+      doc: 'Google client id',
+      default: '',
+      env: 'GOOGLE_ID',
+    },
+    secret: {
+      doc: 'Google secret',
+      default: '',
+      env: 'GOOGLE_SECRET',
+    },
+  },
+  facebook: {
+    id: {
+      doc: 'Facebook client id',
+      default: '',
+      env: 'FACEBOOK_ID',
+    },
+    secret: {
+      doc: 'Facebook secret',
+      default: '',
+      env: 'FACEBOOK_SECRET',
+    },
+  },
+});
+
+export default config;
