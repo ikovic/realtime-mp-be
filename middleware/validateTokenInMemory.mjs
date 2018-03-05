@@ -5,7 +5,7 @@ export default async (req, res, next) => {
   if (!token) {
     return res.sendStatus(400);
   }
-  if (await isValidToken(req.headers.authorization)) {
+  if (await isValidToken(token)) {
     return next();
   }
   res.sendStatus(401);
