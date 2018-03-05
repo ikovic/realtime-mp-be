@@ -15,4 +15,4 @@ export const logoutUserByToken = token => redis.del(token);
 
 export const loginByToken = (token, user) => redis.set(token, user, 'EX', +timestring(config.get('jwtExpiration')));
 
-export const isLoggedIn = async token => !!await getAsync(token);
+export const isValidToken = async token => !!await getAsync(token);
