@@ -18,7 +18,7 @@ router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }))
 router.get('/facebook/callback', passport.authenticate('facebook'), signTokenAndRedirect);
 
 router.post('/logout', validateTokenInMemory, (req, res) => {
-  logoutUserByToken(req.body.token);
+  logoutUserByToken(req.headers.authorization);
   res.send(200);
 });
 
