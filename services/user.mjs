@@ -39,7 +39,8 @@ export const logoutUserByToken = token => redis.del(token);
  * @param {string} token - JWT Token
  * @param {object} user - User object
  */
-export const loginByToken = (token, user) => redis.set(token, user, 'EX', +timestring(config.get('jwtExpiration')));
+export const loginByToken = (token, user) =>
+  redis.set(token, JSON.stringify(user), 'EX', +timestring(config.get('jwtExpiration')));
 
 /**
  * Checks if the supplied token is in the active redis instance
